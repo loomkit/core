@@ -1,0 +1,67 @@
+{
+    "name": "loomkit/core",
+    "description": "Loom Laravel starter-kit core functionality.",
+    "homepage": "https://loomkit.github.io",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "loom",
+        "loomkit",
+        "php"
+    ],
+    "authors": [
+        {
+            "name": "Sigui Kessé Emmanuel",
+            "email": "siguici@proton.me",
+            "homepage": "https://siguici.deno.dev"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/loomkit/loom",
+        "issues": "https://github.com/loomkit/loom/issues",
+        "chat": "https://github.com/orgs/loomkit/discussions"
+    },
+    "require": {
+        "php": "^8.3",
+        "illuminate/console": "^12.24",
+        "spatie/laravel-package-tools": "^1.92"
+    },
+    "require-dev": {
+        "filament/filament": "^4.0",
+        "sikessem/framework": "^0.10.0",
+        "sikessem/laravel-devtools": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Loom\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Loom\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["Loom\\LoomServiceProvider"],
+            "aliases": {
+                "Loom": "Loom\\LoomManager"
+            },
+            "dont-discover": []
+        },
+        "branch-alias": {
+            "dev-main": "0.x-dev"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
