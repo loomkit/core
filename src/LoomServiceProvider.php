@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Loom;
 
 use Loom\Commands\InstallCommand;
+use Loom\Commands\MakeColumnCommand;
+use Loom\Commands\MakeFieldCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -14,8 +16,14 @@ class LoomServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('loom')
-            ->hasCommands($this->getCommands())
-            ->hasConfigFile();
+            ->hasCommands($this->getCommands());
+    }
+
+    public function bootingPackage(): void
+    {
+        $this->publishes([
+            __DIR__.'/../stubs' => base_path('stubs/loom'),
+        ], 'loom-stubs');
     }
 
     /**
@@ -25,6 +33,8 @@ class LoomServiceProvider extends PackageServiceProvider
     {
         $commands = [
             InstallCommand::class,
+            MakeColumnCommand::class,
+            MakeFieldCommand::class,
         ];
 
         $aliases = [];
