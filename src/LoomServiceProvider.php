@@ -19,11 +19,14 @@ class LoomServiceProvider extends PackageServiceProvider
             ->hasCommands($this->getCommands());
     }
 
+    public function registeringPackage(): void
+    {
+        $this->registerServices();
+    }
+
     public function bootingPackage(): void
     {
-        $this->publishes([
-            __DIR__.'/../stubs' => base_path('stubs/loom'),
-        ], 'loom-stubs');
+        $this->registerPublishables();
     }
 
     /**
@@ -53,5 +56,34 @@ class LoomServiceProvider extends PackageServiceProvider
             ...$commands,
             ...$aliases,
         ];
+    }
+
+    protected function registerServices(): void
+    {
+        $this->app->singleton(LoomManager::class);
+        $this->app->alias(LoomManager::class, 'loom');
+    }
+
+    protected function registerPublishables(): void
+    {
+        $this->publishesToGroups([
+            __DIR__.'/../stubs' => base_path('stubs/loom'),
+        ], ['loom', 'loom-core', 'loom-stubs', 'loom-core-stubs']);
+    }
+
+    /**
+     * @param  string[]|null  $groups
+     */
+    protected function publishesToGroups(array $paths, ?array $groups = null): void
+    {
+        if (is_null($groups)) {
+            $this->publishes($paths);
+
+            return;
+        }
+
+        foreach ($groups as $group) {
+            $this->publishes($paths, $group);
+        }
     }
 }
