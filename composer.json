@@ -23,13 +23,9 @@
     },
     "require": {
         "php": "^8.3",
-        "illuminate/console": "^12.24",
+        "illuminate/support": "^12.26",
+        "illuminate/console": "^12.26",
         "spatie/laravel-package-tools": "^1.92"
-    },
-    "require-dev": {
-        "filament/filament": "^4.0",
-        "sikessem/framework": "^0.10.0",
-        "sikessem/laravel-devtools": "^1.4"
     },
     "autoload": {
         "psr-4": {
