@@ -3,4 +3,9 @@
 return [
     'name' => 'Nom',
     'slug' => 'Slug',
+    'description' => 'Description',
+    'detailed_description' => 'Description',
+    'icon' => 'Icône',
+    'visible' => 'Visible',
+    'available' => 'Disponible',
 ];

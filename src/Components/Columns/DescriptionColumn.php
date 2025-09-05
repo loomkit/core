@@ -6,15 +6,19 @@ namespace Loom\Components\Columns;
 
 use Filament\Tables\Columns\TextColumn;
 
-class SlugColumn
+class DescriptionColumn
 {
     public static function make(?string $name = null): TextColumn
     {
-        $name ??= 'slug';
+        $name ??= 'description';
 
         return TextColumn::make($name)
             ->sortable()
             ->searchable()
-            ->label(__('loom::components.slug'));
+            ->wrap()
+            ->words(12)
+            ->limit(48)
+            ->lineClamp(1)
+            ->label(__('loom::components.description'));
     }
 }
