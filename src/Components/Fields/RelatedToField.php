@@ -8,7 +8,7 @@ use Closure;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Str;
 
-class RelatedToField
+class RelatedToField extends Field
 {
     public static function make(
         ?string $name = null,
@@ -32,6 +32,7 @@ class RelatedToField
 
         return Select::make(Str::snake($name))
             ->relationship($related, $titleAttribute, $modifyQueryUsing, $ignoreRecord)
+            ->multiple($related === Str::plural($related))
             ->label(__($label));
     }
 }
