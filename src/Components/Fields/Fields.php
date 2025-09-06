@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Loom\Components\Fields;
 
+use ArrayAccess;
 use ArrayIterator;
 use Closure;
 use Countable;
@@ -20,9 +21,13 @@ use Loom\Components\Component;
 use Traversable;
 
 /**
- * @implements IteratorAggregate<string, FormField>
+ * @template TKey of string
+ * @template TValue of FormField
+ *
+ * @implements IteratorAggregate<TKey, TValue>
+ * @implements ArrayAccess<TKey, TValue>
  */
-abstract class Fields extends Component implements Countable, IteratorAggregate
+abstract class Fields extends Component implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * @param  array<string, FormField>  $schema
@@ -51,6 +56,30 @@ abstract class Fields extends Component implements Countable, IteratorAggregate
     public function remove(string $name): static
     {
         unset($this->schema[$name]);
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure(TValue $field, TKey $name): TValue  $mapper
+     */
+    public function map(Closure $mapper): static
+    {
+        foreach ($this as $name => $field) {
+            $this[$name] = $mapper($field, $name);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @template T of array<TKey, TValue>
+     *
+     * @param  Closure(T $fields): T  $pipe
+     */
+    public function pipe(Closure $pipe): static
+    {
+        $this->schema = $pipe($this->schema);
 
         return $this;
     }
@@ -117,11 +146,6 @@ abstract class Fields extends Component implements Countable, IteratorAggregate
         return $this->has($name);
     }
 
-    public function __unset(string $name): void
-    {
-        $this->remove($name);
-    }
-
     /**
      * @param  array{}|array{0: FormField}  $fields
      */
@@ -144,5 +168,43 @@ abstract class Fields extends Component implements Countable, IteratorAggregate
             'flex' => $this->section(),
             default => $this->group()
         };
+    }
+
+    /**
+     * @param  TKey  $offset
+     */
+    public function offsetExists(mixed $offset): bool
+    {
+        return $this->has($offset);
+    }
+
+    /**
+     * @param  TKey  $offset
+     */
+    public function offsetGet(mixed $offset): ?FormField
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * @param  TKey  $offset
+     * @param  TValue  $value
+     */
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        $this->set($offset, $value);
+    }
+
+    /**
+     * @param  TKey  $offset
+     */
+    public function offsetUnset(mixed $offset): void
+    {
+        $this->remove($offset);
+    }
+
+    public function __unset(string $name): void
+    {
+        $this->remove($name);
     }
 }
