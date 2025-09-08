@@ -10,14 +10,14 @@ class SlugField extends Field
 {
     public static function make(?string $name = null): TextInput
     {
-        $name ??= 'slug';
+        $name ??= config()->string('loom.components.slug.name', 'slug');
 
         return TextInput::make($name)
             ->required()
             ->unique(ignoreRecord: true)
             ->alphaDash()
-            ->minLength(1)
-            ->maxLength(255)
+            ->minLength(config()->integer('loom.components.slug.min_length', 1))
+            ->maxLength(config()->integer('loom.components.slug.max_length', 255))
             ->label(__('loom::components.slug'));
     }
 }

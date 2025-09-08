@@ -8,7 +8,7 @@ use Closure;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Str;
 
-class RelatedToField extends Field
+class RelationshipField extends Field
 {
     public static function make(
         ?string $name = null,
@@ -16,7 +16,7 @@ class RelatedToField extends Field
         ?Closure $modifyQueryUsing = null,
         bool $ignoreRecord = false
     ): Select {
-        $name ??= 'related_to';
+        $name ??= Str::beforeLast(Str::afterLast(static::class, '\\'), 'Field');
         $related = Str::snake($name);
         if (Str::endsWith($related, '_id')) {
             $related = Str::singular(Str::beforeLast($related, '_id'));
@@ -24,17 +24,20 @@ class RelatedToField extends Field
         if (Str::endsWith($related, '_ids')) {
             $related = Str::plural(Str::beforeLast($related, '_ids'));
         }
-        $label = $related;
-        $loomLabel = "loom::components.{$label}";
-        if (__($loomLabel) !== $loomLabel) {
-            $label = "loom::components.{$label}";
-        } else {
-            $label = Str::title($label);
+        $label = "loom::components.{$related}";
+        if (__($label) === $label) {
+            $label = Str::title($related);
         }
+        $titleAttribute ??= config()->string("loom.components.{$related}.title_attribute", 'name');
         $related = Str::camel($related);
 
         return Select::make(Str::snake($name))
-            ->relationship($related, $titleAttribute, $modifyQueryUsing, $ignoreRecord)
+            ->relationship(
+                $related,
+                $titleAttribute,
+                $modifyQueryUsing,
+                $ignoreRecord
+            )
             ->multiple($related === Str::plural($related))
             ->label(__($label));
     }
