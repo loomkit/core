@@ -6,13 +6,13 @@ namespace Loom\Components\Columns;
 
 use Filament\Tables\Columns\TextColumn;
 
-class DetailedDescriptionColumn extends DescriptionColumn
+class KeywordsColumn extends TagsColumn
 {
     public static function make(?string $name = null): TextColumn
     {
-        $name ??= config()->string('loom.components.detailed_description.name', 'description');
+        $name ??= config()->string('loom.components.keywords.name', 'keywords');
 
         return parent::make($name)
-            ->label(__('loom::components.detailed_description'));
+            ->label(__('loom::components.keywords'));
     }
 }

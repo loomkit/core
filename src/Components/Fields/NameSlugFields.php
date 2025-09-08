@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Loom\Components\Fields;
 
-use Filament\Forms\Components\Field;
 use Illuminate\Support\Str;
 
+/**
+ * @extends Fields<string, \Filament\Forms\Components\TextInput>
+ *
+ * @property ?NameField $name
+ * @property ?SlugField $slug
+ *
+ * @method ?SlugField slug(?SlugField $field)
+ * @method ?NameField name(?NameField $field)
+ */
 class NameSlugFields extends Fields
 {
-    protected string $nameKey = 'name';
-
-    protected string $slugKey = 'slug';
-
     public static function make(?string $name = null, ?string $slug = null): self
     {
-        $name ??= 'name';
-        $slug ??= 'slug';
+        $name ??= config()->string('loom.components.name.name', 'name');
+        $slug ??= config()->string('loom.components.slug.name', 'slug');
 
         $self = new self([
             $name => NameField::make($name)
@@ -26,19 +30,6 @@ class NameSlugFields extends Fields
             $slug => SlugField::make($slug),
         ]);
 
-        $self->nameKey = $name;
-        $self->slugKey = $slug;
-
         return $self;
-    }
-
-    public function name(): ?Field
-    {
-        return $this->get($this->nameKey);
-    }
-
-    public function slug(): ?Field
-    {
-        return $this->get($this->slugKey);
     }
 }
