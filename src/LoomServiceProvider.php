@@ -17,11 +17,12 @@ class LoomServiceProvider extends LoomPackageServiceProvider
             ->name('loom')
             ->hasConfigFile()
             ->hasTranslations()
+            ->hasAssets()
             ->hasCommands($this->getCommands())
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->startWith(function (InstallCommand $command) {
-                        $command->info(Loom::getLogo());
+                        $command->info(Loom::logo());
                     })
                     ->copyAndRegisterServiceProviderInApp()
                     ->askToStarRepoOnGitHub('loomkit/loom');
@@ -69,6 +70,7 @@ class LoomServiceProvider extends LoomPackageServiceProvider
     protected function registerServices(): void
     {
         $this->app->singleton(LoomManager::class);
+        $this->app->scoped(LoomPlugin::class);
         $this->app->alias(LoomManager::class, 'loom');
     }
 

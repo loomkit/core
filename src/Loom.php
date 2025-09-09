@@ -7,12 +7,25 @@ namespace Loom;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static string getVersion()
- * @method static string getNamespace()
- * @method static string getName()
- * @method static string getIcon()
- * @method static string getNiceName()
- * @method static string getLogo(string $color = 'blue', bool $filled = true)
+ * @method static string version()
+ * @method static string namespace()
+ * @method static string name(?string $newName = null)
+ * @method static string icon(?string $newIcon = null)
+ * @method static string color(?string $newColor = null)
+ * @method static string niceName()
+ * @method static string slug()
+ * @method static string logo(?string $newLogo = null)
+ * @method static LoomPlugin plugin()
+ * @method static mixed config(string $key, mixed $default = null)
+ * @method static string|array trans(string $key, array $replace = [], ?string $locale = null)
+ * @method static string useSimpleLogo()
+ * @method static string useFilledLogo()
+ * @method static string basePath(string $path = '')
+ * @method static string resourcePath(string $path = '')
+ * @method static string distPath(string $path = '')
+ * @method static string asset(string $path)
+ * @method static string logoPath()
+ * @method static string faviconPath()
  *
  * @see \Loom\LoomManager
  */

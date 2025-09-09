@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Loom\Components\Fields;
 
 use Illuminate\Support\Str;
+use Loom\Components\Fields;
 
 /**
  * @extends Fields<string, \Filament\Forms\Components\TextInput>
@@ -17,19 +18,21 @@ use Illuminate\Support\Str;
  */
 class NameSlugFields extends Fields
 {
-    public static function make(?string $name = null, ?string $slug = null): self
+    /**
+     * @param  array<string, \Filament\Forms\Components\TextInput>|null  $schema
+     * @return parent<string, \Filament\Forms\Components\TextInput>
+     */
+    public static function make(?array $schema = null): parent
     {
-        $name ??= config()->string('loom.components.name.name', 'name');
-        $slug ??= config()->string('loom.components.slug.name', 'slug');
+        $name = loom()->config('components.name.name', 'name');
+        $slug = loom()->config('components.slug.name', 'slug');
 
-        $self = new self([
+        return parent::make($schema ?? [
             $name => NameField::make($name)
                 ->reactive()
                 ->live(onBlur: true)
                 ->afterStateUpdated(fn (string $state, callable $set) => $set($slug, Str::slug($state))),
             $slug => SlugField::make($slug),
         ]);
-
-        return $self;
     }
 }
