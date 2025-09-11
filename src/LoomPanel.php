@@ -24,15 +24,10 @@ use Override;
 
 class LoomPanel extends Panel
 {
-    protected LoomManager $loom;
-
-    public function __construct()
-    {
-        $this->loom = loom();
-    }
+    public function __construct(public readonly LoomManager $loom) {}
 
     #[Override]
-    public static function make(?array $config = null): static
+    public static function make(?array $options = null): static
     {
         ($static = parent::make())
             ->favicon($static->loom->faviconPath())
@@ -75,8 +70,8 @@ class LoomPanel extends Panel
                 Authenticate::class,
             ]);
 
-        if ($config) {
-            foreach ($config as $key => $value) {
+        if ($options) {
+            foreach ($options as $key => $value) {
                 $method = Str::camel($key);
                 if (method_exists($static, $method)) {
                     $static->{$method}($value);
