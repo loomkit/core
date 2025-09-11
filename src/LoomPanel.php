@@ -10,7 +10,6 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationItem;
 use Filament\Panel;
-use Filament\PanelProvider as FilamentPanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Platform;
 use Filament\Support\Icons\Heroicon;
@@ -19,18 +18,26 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Override;
 
-abstract class LoomPanelProvider extends FilamentPanelProvider
+class LoomPanel extends Panel
 {
-    abstract public function configure(Panel $panel): Panel;
+    protected LoomManager $loom;
 
-    public function panel(Panel $panel): Panel
+    public function __construct()
     {
-        $panel
-            ->favicon(Loom::faviconPath())
-            ->brandName(Loom::name())
-            ->brandLogo(Loom::logoPath())
+        $this->loom = loom();
+    }
+
+    #[Override]
+    public static function make(?array $config = null): static
+    {
+        ($static = parent::make())
+            ->favicon($static->loom->faviconPath())
+            ->brandName($static->loom->name())
+            ->brandLogo($static->loom->logoPath())
             ->brandLogoHeight('3rem')
             ->colors([
                 'primary' => Color::Blue,
@@ -66,9 +73,17 @@ abstract class LoomPanelProvider extends FilamentPanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])
-            ->plugin(LoomPlugin::make());
+            ]);
 
-        return $this->configure($panel);
+        if ($config) {
+            foreach ($config as $key => $value) {
+                $method = Str::camel($key);
+                if (method_exists($static, $method)) {
+                    $static->{$method}($value);
+                }
+            }
+        }
+
+        return $static;
     }
 }
